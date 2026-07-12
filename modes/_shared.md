@@ -65,7 +65,8 @@ The evaluation uses 6 blocks (A-F) with a global score of 1-5:
 | Match con CV | Skills, experience, proof points alignment |
 | North Star alignment | How well the role fits the user's target archetypes (from _profile.md) |
 | Comp | Salary vs market (5=top quartile, 1=well below) |
-| Cultural signals | Company culture, growth, stability, remote policy |
+| Cultural signals | Company culture, growth, stability |
+| Geographic fit | How the role's location matches the user's tiered geography preferences (from `config/profile.yml` → `geography`), if configured |
 | Red flags | Blockers, warnings (negative adjustments) |
 | **Global** | Weighted average of above |
 
@@ -76,13 +77,22 @@ The evaluation uses 6 blocks (A-F) with a global score of 1-5:
 - Below 3.5 → Recommend against applying (see Ethical Use in AGENTS.md)
 
 **How to score the "Cultural signals" dimension:**
-1. Read `culture_screen.require` from `config/profile.yml`. If `culture_screen` is missing or empty, skip the structural capping and score the dimension qualitatively based on company size, remote policy, and stability.
+1. Read `culture_screen.require` from `config/profile.yml`. If `culture_screen` is missing or empty, skip the structural capping and score the dimension qualitatively based on company size and stability.
 2. Actively look for evidence in the JD + Block G company research corresponding to those requirements (e.g., team size mentions, org-chart depth/manager layers, meeting-culture language, company stage).
 3. **If most `require` criteria have positive evidence** → score 4-5.
 4. **If some criteria have positive evidence, and none are contradicted** → score 3.
 5. **If evidence contradicts the `require` criteria** → **cap this dimension at 2/5**, and add an explicit line to Block A's Culture Screen field (see `oferta.md`) naming what's missing or contradicted. Do not let a strong CV-match score silently compensate for this — surface it, don't bury it.
 6. **If no evidence exists for any `require` criterion** → score 3 by default, unless `culture_screen.deprioritize_if_absent: true` is set, in which case **cap this dimension at 2/5**.
 7. A role scoring 4.5+ overall but 2 or below on Cultural signals must carry an explicit warning in the report: "High technical fit, unconfirmed/poor culture fit — verify before applying."
+
+**How to score the "Geographic fit" dimension:**
+1. Read `geography` from `config/profile.yml`. If absent or empty, skip this dimension — fold location into Cultural signals qualitatively as before.
+2. Match the posting's location (or its remote scope) against `geography.tier_1a`, `tier_1b`, and `tier_2`, in that order.
+3. **Tier 1a match** → score 5/5.
+4. **Tier 1b match** → score 4-5/5. This tier must not be penalized as a consolation prize — a strong role here can and should outscore a mediocre Tier 1a role once blended into the Global average.
+5. **Tier 2 match** → **cap at 2/5 by default** (heavier if `tier_2_penalty: heavy`). Only raise into the 3-4 range if every other block is independently strong — Match with CV, Level/Seniority (Block C), Cultural signals, and Comp all score well on their own evidence, not the JD's self-description ("great opportunity", "fast-growing team"). A Tier 2 role should very rarely reach the 4.0 apply threshold; when it does, the report should make clear which other dimensions justified it.
+6. **Unlisted location, not remote** → score 2/5. Do not auto-reject — Geographic Fit is a weighted dimension, not a gate (that's what `exclusions` is for, and it only covers industries, never location).
+7. **Batch/scan self-audit:** if more than 2 Tier 2 roles clear the candidate's normal apply threshold (score ≥ 4.0) within a single batch or scan run, say so explicitly in the summary — that's a signal the Tier 2 penalty may be calibrated too low, worth flagging rather than applying silently.
 
 ## Posting Legitimacy (Block G)
 
@@ -150,12 +160,11 @@ Classify every offer into one of these types (or hybrid of 2):
 
 | Archetype | Key signals in JD |
 |-----------|-------------------|
-| AI Platform / LLMOps | "observability", "evals", "pipelines", "monitoring", "reliability" |
-| Agentic / Automation | "agent", "HITL", "orchestration", "workflow", "multi-agent" |
-| Technical AI PM | "PRD", "roadmap", "discovery", "stakeholder", "product manager" |
-| AI Solutions Architect | "architecture", "enterprise", "integration", "design", "systems" |
-| AI Forward Deployed | "client-facing", "deploy", "prototype", "fast delivery", "field" |
-| AI Transformation | "change management", "adoption", "enablement", "transformation" |
+| BI / Reporting Analyst | "Power BI", "Tableau", "dashboard", "KPI", "reporting", "business intelligence" |
+| Data Analyst | "SQL", "data analyst", "ad hoc analysis", "insights", "data cleaning", "data validation" |
+| Analytics Engineer | "dbt", "warehouse", "data modeling", "analytics engineer", "Snowflake", "BigQuery", "Redshift" |
+| Data Engineer | "ETL", "ELT", "data engineer", "pipelines", "Airflow", "data infrastructure" |
+| Commercial / Marketing Analytics | "marketing analytics", "commercial analytics", "campaign performance", "customer segmentation", "go-to-market" |
 
 After detecting archetype, read `modes/_profile.md` for the user's specific framing and proof points for that archetype.
 

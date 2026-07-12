@@ -113,6 +113,23 @@ cv:
   # (e.g. "use the modern template").
   # template: modern
 
+# ── Hard Exclusions ──────────────────────────────────────────────────────────
+#
+# Industries that get auto-disqualified before scoring, not just scored low.
+# Read by the Hard Exclusion Gate in modes/oferta.md and modes/auto-pipeline.md
+# (mirrors the data/blacklist.md gate, but by industry instead of by company).
+# Absent/commented = no gate, nothing is auto-excluded.
+#
+# scope: "strict" excludes ANY company in the industry, including vendors that
+# only sell into it (e.g. a general BI tool company whose customers happen to
+# include hospitals is still excluded under "strict"). "narrow" excludes only
+# companies that ARE providers/payers/pharma/insurers themselves.
+# exclusions:
+#   industries:
+#     - "healthcare"
+#   scope: "strict"   # "strict" | "narrow"
+#   reason: "Hard no -- do not apply, do not soften to a low score."
+
 # ── Culture Screen ───────────────────────────────────────────────────────────
 #
 # Enforces structural capping on the "Cultural signals" dimension during evaluation.

@@ -24,6 +24,15 @@ If `data/blacklist.md` exists, check the posting's company against it before Blo
 2. Wait for an explicit answer — never silently refuse, never silently proceed. The candidate's call always wins (same HITL spirit as the score < 4.0 rule): an explicit yes runs the full A-G evaluation as normal (note the override in the report notes); anything else stops here with no evaluation, report, or CV.
 3. No match, or no `data/blacklist.md` → proceed. A blacklist entry never changes any score anywhere — it is a gate, not a signal.
 
+## Hard Exclusion Gate
+
+Read `exclusions` from `config/profile.yml`. If the key is absent or empty, skip this gate — nothing is auto-excluded by default.
+
+1. Determine whether the posting's company belongs to one of `exclusions.industries`. Under `scope: "strict"`, this includes vendors whose product/customers are primarily in that industry (e.g. a general-purpose BI tool company that sells mainly to hospitals still counts). Under `scope: "narrow"`, only match companies that ARE providers/payers/insurers/pharma/etc. themselves.
+2. On a match, **stop before Block A** — do not run any evaluation, do not generate a report or PDF. Tell the candidate plainly: "{Company} is in an excluded industry ({industry}) — {reason from config}. Skipping this one." Unlike the blacklist gate, this does not ask for confirmation — the candidate already marked this as a hard no, not a judgment call.
+3. If the entry came from `data/pipeline.md`, mark it `- [x] ~~Company | Role~~ — excluded industry`.
+4. No match, or no `exclusions` configured → proceed. This gate never changes any score — it is a stop, not a signal.
+
 ## Bounded Research Budget
 
 Company, compensation, and hiring-signal research must be a single-pass lookup, not an open-ended investigation. This mode is an evaluation workflow, not deep company research.
@@ -39,7 +48,7 @@ If deeper company research is useful, recommend running `/career-ops deep` separ
 
 ## Step 0 — Archetype Detection
 
-Classify the job into one of the 6 archetypes (see `_shared.md`). If it is a hybrid, indicate the 2 closest ones. This determines:
+Classify the job into one of the archetypes (see `_shared.md`). If it is a hybrid, indicate the 2 closest ones. This determines:
 - Which proof points to prioritize in block B
 - How to rewrite the summary in block E
 - Which STAR stories to prepare in block F
@@ -54,6 +63,7 @@ Table with:
 - Remote (full/hybrid/onsite)
 - Team size (if mentioned)
 - **Culture screen** (see `_shared.md` § Scoring System): pass / caution / fail, with the specific evidence found or missing — not just a score, name what you saw
+- **Geographic fit** (see `_shared.md` § Scoring System, requires `config/profile.yml` → `geography`): tier matched (1a / 1b / 2 / unlisted) + the resulting score, e.g. "Tier 2 (Nashville, TN) — 2/5, no exceptional signals found to lift it"
 - TL;DR in 1 sentence
 
 ### Geo-mismatch check
@@ -76,12 +86,11 @@ The flag is an additive line only — Block B's existing content stays unchanged
 Read `cv.md`. Create a table with each JD requirement mapped to exact lines in the CV.
 
 **Adapted to the archetype:**
-- If FDE → prioritize delivery speed and client-facing proof points
-- If SA → prioritize system design and integrations
-- If PM → prioritize product discovery and metrics
-- If LLMOps → prioritize evals, observability, pipelines
-- If Agentic → prioritize multi-agent, HITL, orchestration
-- If Transformation → prioritize change management, adoption, scaling
+- If BI / Reporting Analyst → prioritize dashboard/KPI ownership and exec-facing delivery
+- If Data Analyst → prioritize SQL depth and ad hoc analysis under ambiguity
+- If Analytics Engineer → prioritize data modeling at scale and warehouse/ETL ownership
+- If Data Engineer → prioritize pipeline architecture and cloud migration experience
+- If Commercial / Marketing Analytics → prioritize segmentation and GTM-facing stakeholder work
 
 **Gaps** section with mitigation strategy for each. For each gap:
 1. Is it a hard blocker or a nice-to-have?

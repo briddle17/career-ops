@@ -34,6 +34,10 @@ If `data/blacklist.md` exists, check the posting's company against it before run
 
 On a hit, **stop before Step 1** and surface the candidate's own recorded decision: tell them which entry matched and quote their recorded reason ("{Company} is on your blacklist (since {Since}): *{Reason}*. Do you still want me to evaluate it?"). Wait for an explicit answer — never silently refuse, never silently proceed. The candidate's call always wins (same HITL spirit as the score < 4.0 rule): an explicit yes continues to Step 1 as normal; anything else stops the pipeline here, and if the entry came from `data/pipeline.md`, mark it `- [x] ~~Company | Role~~ — blacklisted`. A blacklist entry never changes any score.
 
+## Step 0.7 — Hard Exclusion gate
+
+Read `exclusions` from `config/profile.yml`. If absent or empty, skip this gate. If the posting's company belongs to one of `exclusions.industries` (under `scope: "strict"`, this includes vendors that primarily sell into that industry), **stop before Step 1** — no evaluation, no report, no PDF. Unlike the blacklist gate this needs no confirmation: tell the candidate "{Company} is in an excluded industry ({industry}) — {reason from config}. Skipping this one." and if the entry came from `data/pipeline.md`, mark it `- [x] ~~Company | Role~~ — excluded industry`. This gate never changes any score.
+
 ## Step 1 — A-G Evaluation
 
 Execute the same as the `oferta` mode (read `modes/oferta.md` for all A-F blocks + Block G Posting Legitimacy). Read `modes/_custom.md` → Evaluation Rules, if it exists, and apply its override here. Default (if absent or silent): standard A-G evaluation.
