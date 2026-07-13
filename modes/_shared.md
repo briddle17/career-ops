@@ -165,8 +165,9 @@ Classify every offer into one of these types (or hybrid of 2):
 | Analytics Engineer | "dbt", "warehouse", "data modeling", "analytics engineer", "Snowflake", "BigQuery", "Redshift" |
 | Data Engineer | "ETL", "ELT", "data engineer", "pipelines", "Airflow", "data infrastructure" |
 | Commercial / Marketing Analytics | "marketing analytics", "commercial analytics", "campaign performance", "customer segmentation", "go-to-market" |
+| GIS / Geospatial Analyst | "GIS", "geospatial", "Esri", "ArcGIS", "mapping", "location intelligence" |
 
-After detecting archetype, read `modes/_profile.md` for the user's specific framing and proof points for that archetype.
+After detecting archetype, read `modes/_profile.md` for the user's specific framing and proof points for that archetype. Not every archetype carries equal priority — check `config/profile.yml` → `target_roles.archetypes` → `fit` (primary/secondary/adjacent) before weighting North Star alignment.
 
 ## Global Rules
 

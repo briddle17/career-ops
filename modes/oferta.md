@@ -91,6 +91,7 @@ Read `cv.md`. Create a table with each JD requirement mapped to exact lines in t
 - If Analytics Engineer → prioritize data modeling at scale and warehouse/ETL ownership
 - If Data Engineer → prioritize pipeline architecture and cloud migration experience
 - If Commercial / Marketing Analytics → prioritize segmentation and GTM-facing stakeholder work
+- If GIS / Geospatial Analyst → prioritize the capstone's geospatial visualization work; frame as adjacent experience, not a core specialty (see North Star `fit: adjacent` in `config/profile.yml`)
 
 **Gaps** section with mitigation strategy for each. For each gap:
 1. Is it a hard blocker or a nice-to-have?
